@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Services;
+
+use App\Enum\WeatherConditions;
+use App\Services\WeatherNotificationInterface;
+use App\Models\Employee;
+
+readonly class WeatherNotificationService
+{
+
+    public function __construct(private WeatherNotificationInterface $notification)
+    {
+    }
+
+    public function handleNotification(): void
+    {
+
+        $employees = Employee::getWithWeatherCode();
+
+        foreach ($employees as $employee) {
+            $employeeWithWeatherRelation = $employee->find($employee->id);
+            $employeeEmail = $employee->email;
+            $weatherCode = $employeeWithWeatherRelation->weather->code;
+            $message = WeatherConditions::getRecomendationsByCode($weatherCode);
+            $this->notification->sendWeatherNotification($employeeEmail, $message);
+
+        }
+
+    }
+}

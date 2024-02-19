@@ -15,11 +15,11 @@ php artisan app:update-weather
 php artisan app:notify-employee
 
 Choose notification method by binding [WeatherEmailNotificationAction.php](app%2FAction%2FWeatherEmailNotificationAction.php) or [WeatherLogNotificationAction.php](app%2FAction%2FWeatherLogNotificationAction.php)
-to [WeatherNotificationInterface.php](app%2FInterface%2FWeatherNotificationInterface.php) in [AppServiceProvider.php](app%2FProviders%2FAppServiceProvider.php)
+to [WeatherNotificationInterface.php](app%2FServices%2FWeatherNotificationInterface.php) in [AppServiceProvider.php](app%2FProviders%2FAppServiceProvider.php)
 
 
 ## Routes:
-get employee list
+get employee list. use 'limit' and 'offset' get params to receive more items, default limit is 500
 http://127.0.0.1:8000/api/employee
 
 get employee by id

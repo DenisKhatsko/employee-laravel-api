@@ -8,6 +8,7 @@ use App\Http\Requests\Api\EmployeeRequest;
 use App\Http\Resources\Api\EmployeeResource;
 use App\Models\Employee;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
@@ -18,22 +19,37 @@ use Illuminate\Support\Facades\Log;
 class EmployeeController extends Controller
 {
 
+    private int $limit = 500;
+    private int $offset = 0;
+
     /**
      * Display a listing of the resource.
      */
-    public function index():JsonResource
+    public function index(Request $request):JsonResource
     {
-        if (Cache::has('employees')) {
+        if ($request->has('offset')) {
+            $offset = (int)$request->get('offset');
+            $this->offset = ($offset > 0) ? $offset : 0;
+        }
+        if ($request->has('limit')) {
+            $limit = (int)$request->get('limit');
+            $this->limit = ($limit > 0 && $limit < 500) ? $limit : $this->limit;
+        }
 
-            return EmployeeResource::collection(Cache::get('employees'));
+        if (Cache::has('employees'. $this->offset . $this->limit)) {
+
+            return EmployeeResource::collection(Cache::get('employees'. $this->offset . $this->limit));
         }
         try {
-            $employees = Employee::all();
+            $qb = Employee::query();
+
+            $qb->offset($this->offset)->limit($this->limit);
+            $employees = $qb->get();
 
         } catch (\Exception $e) {
             Log::channel('api')->error($e->getMessage());
         }
-        return EmployeeResource::collection(Cache::remember('employees',60*60*24, function() use ($employees) {
+        return EmployeeResource::collection(Cache::remember('employees'. $this->offset . $this->limit,60*60*24, function() use ($employees) {
             return $employees;
         }) );
 

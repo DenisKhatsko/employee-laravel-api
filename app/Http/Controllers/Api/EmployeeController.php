@@ -40,15 +40,11 @@ class EmployeeController extends Controller
 
             return EmployeeResource::collection(Cache::get('employees'. $this->offset . $this->limit));
         }
-        try {
-            $qb = Employee::query();
+        $qb = Employee::query();
 
-            $qb->offset($this->offset)->limit($this->limit);
-            $employees = $qb->get();
+        $qb->offset($this->offset)->limit($this->limit);
+        $employees = $qb->get();
 
-        } catch (\Exception $e) {
-            Log::channel('api')->error($e->getMessage());
-        }
         return EmployeeResource::collection(Cache::remember('employees'. $this->offset . $this->limit,60*60*24, function() use ($employees) {
             return $employees;
         }) );
@@ -60,15 +56,9 @@ class EmployeeController extends Controller
      */
     public function store(EmployeeRequest $request)
     {
+        $employee = Employee::create($request->validated());
 
-        $validated = $request->validated();
-        $employee = null;
-        try {
-            $employee = Employee::create($validated);
-        } catch (\Exception $e) {
-            Log::channel('api')->error($e->getMessage());
-        }
-        return response()->json($employee, $employee ? 201 : 400);
+        return response()->success($employee, 201);
 
     }
 
@@ -77,16 +67,9 @@ class EmployeeController extends Controller
      */
     public function show($id):JsonResource|JsonResponse
     {
-        $employee = null;
-        try {
-            $employee = Employee::findById($id);
+        $employee = Employee::findOrFail($id);
 
-        } catch (\Exception $e) {
-            Log::channel('api')->error($e->getMessage());
-
-        }
-
-        return response()->json($employee, $employee ? 200 : 404);
+        return response()->success($employee);
     }
 
     /**
@@ -94,15 +77,12 @@ class EmployeeController extends Controller
      */
     public function update(EmployeeRequest $request, Employee $employee): JsonResponse
     {
-        $validated = $request->validated();
-        $result = false;
-        try {
-            $result = $employee->update($validated);
-        } catch (\Exception $e) {
-            Log::channel('api')->error($e->getMessage());
+        $result = $employee->update($request->validated());
+        if ($result) {
+            return response()->success($employee, 202);
         }
 
-        return response()->json($employee, $result ? 202 : 400);
+        return response()->not_found(400);
     }
 
     /**
@@ -111,14 +91,12 @@ class EmployeeController extends Controller
     public function destroy($id): JsonResponse
     {
         if (!Employee::find($id)) {
-            return response()->json([], 404);
+            return response()->not_found();
         }
-        try {
-            Employee::deleteRecord($id);
-        } catch (\Exception $e) {
-            Log::channel('api')->error($e->getMessage());
-        }
-        return response()->json([], 202);
+
+        Employee::deleteRecord($id);
+
+        return response()->success([], 202);
     }
 
     /**
@@ -126,18 +104,11 @@ class EmployeeController extends Controller
      */
     public function highestSalaryByCountry($country = null): JsonResponse|AnonymousResourceCollection
     {
-        $employee = null;
+        $employee = Employee::getEmployeesWithHighestSalaryByCountry($country);
 
-        try {
-            $employee = Employee::getEmployeesWithHighestSalaryByCountry($country);
-        } catch (\Exception $e) {
-
-            Log::channel('api')->error($e->getMessage());
-        }
         if ($employee->isEmpty()) {
-            return response()->json([], 404);
+            return response()->not_found();
         }
-
         return EmployeeResource::collection($employee);
 
     }
@@ -147,15 +118,10 @@ class EmployeeController extends Controller
      */
     public function employeeByPosition($position): JsonResponse|AnonymousResourceCollection
     {
-        $employee = null;
-        try {
-            $employee = Employee::getEmployeesByPositon($position);
-        } catch (\Exception $e) {
-            Log::channel('api')->error($e->getMessage());
-        }
+        $employee = Employee::getEmployeesByPositon($position);
 
         if ($employee->isEmpty()) {
-            return response()->json([], 404);
+            return response()->not_found();
         }
 
         return EmployeeResource::collection($employee);
@@ -167,15 +133,10 @@ class EmployeeController extends Controller
      */
     public function employeePdf($id): Response|JsonResponse
     {
-        $employee = null;
-        try {
-            $employee = Employee::getEmployeeById($id);
-        } catch (\Exception $e) {
-            Log::channel('api')->error($e->getMessage());
-        }
+        $employee = Employee::getEmployeeById($id);
 
         if (is_null($employee)) {
-            return response()->json([], 404);
+            return response()->not_found();
         }
 
         return DownloadEmployeePdfAction::getPdf($employee);

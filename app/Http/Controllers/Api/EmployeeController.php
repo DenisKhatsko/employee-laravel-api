@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\EmployeeRequest;
 use App\Http\Resources\Api\EmployeeResource;
 use App\Models\Employee;
+use App\Models\Weather;
 use App\Services\EmployeeQueryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -97,6 +98,9 @@ class EmployeeController extends Controller
     {
         if (!Employee::find($id)) {
             return response()->not_found();
+        }
+        if ($weather = Weather::query()->where('employee_id', $id)) {
+            $weather->delete();
         }
 
         Employee::query()->where('id', $id)->delete();

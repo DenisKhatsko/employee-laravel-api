@@ -26,62 +26,10 @@ class Employee extends Model
         'position',
     ];
 
-
-    public static function getWithWeatherCode():Collection
-    {
-        return Employee::query()->with('weather')->get();
-    }
-
     public function weather(): HasOne
     {
         return $this->hasOne(Weather::class,'employee_id','id');
     }
 
-    public static function getEmployeesWithHighestSalaryByCountry($country):Collection
-    {
-
-        $query = Employee::select('employees.*')
-            ->leftJoin(DB::raw('(SELECT country, MAX(salary) AS max_salary FROM employees GROUP BY country) AS max_salaries'), function ($join) {
-                $join->on('employees.country', '=', 'max_salaries.country')
-                    ->on('employees.salary', '=', 'max_salaries.max_salary');
-            })
-            ->whereNotNull('max_salaries.country');
-
-        if($country) {
-            $query->where('employees.country', $country);
-        }
-        return $query->get();
-    }
-
-    public static function getEmployeesByPositon($position):Collection
-    {
-        return Employee::query()->where('position', $position)->get();
-    }
-
-    public static function getEmployeeById($id):Model|null
-    {
-        return Employee::query()->where('id', $id)->first();
-    }
-
-    public static function deleteRecord($id): void
-    {
-        Employee::query()->where('id', $id)->delete();
-    }
-
-    public static function findById($id): Model|null
-    {
-
-        return Employee::query()->where('id', $id)->first();
-    }
-
-    public static function getUniqueCountryNames(): Collection
-    {
-        return Employee::query()->select('country')->groupBy('country')->get();
-    }
-
-    public static function getEmployeeByCountry($country):Collection
-    {
-        return Employee::query()->where('country', $country)->get();
-    }
 
 }

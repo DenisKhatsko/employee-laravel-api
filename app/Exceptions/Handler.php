@@ -24,13 +24,14 @@ class Handler extends ExceptionHandler
 
     /**
      * Register the exception handling callbacks for the application.
+     * @throws Throwable
      */
     public function register(): void
     {
         $this->renderable(function (ModelNotFoundException|NotFoundHttpException $e, $request) {
             if ($request->is('api/*')) {
                 Log::channel('api')->error($e->getMessage());
-                return response()->json(['message' => 'Data not found'], 404);
+                return response()->json([], 404);
             }
 
         });

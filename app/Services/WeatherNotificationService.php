@@ -16,7 +16,7 @@ readonly class WeatherNotificationService
     public function handleNotification(): void
     {
 
-        $employees = Employee::getWithWeatherCode();
+        $employees = EmployeeQueryService::getWithWeatherCode();
 
         foreach ($employees as $employee) {
             $employeeWithWeatherRelation = $employee->find($employee->id);

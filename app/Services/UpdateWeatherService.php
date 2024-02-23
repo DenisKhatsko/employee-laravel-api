@@ -21,7 +21,7 @@ class UpdateWeatherService
 
     public function handle():void
     {
-        $this->countryList = Employee::getUniqueCountryNames();
+        $this->countryList = EmployeeQueryService::getUniqueCountryNames();
 
         $weatherData =  $this->weatherApiAction->getData($this->countryList);
 
@@ -44,7 +44,7 @@ class UpdateWeatherService
         $data = [];
         foreach ($this->countryList as $country) {
 
-            $employees = Employee::getEmployeeByCountry($country->country);
+            $employees = EmployeeQueryService::getEmployeeByCountry($country->country);
             $countryWeatherCode = $this->weatherDto->getWeatherCodeByCountry($country->country);
 
             foreach ($employees as $employee) {

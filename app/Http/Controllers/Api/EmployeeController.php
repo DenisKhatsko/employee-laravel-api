@@ -7,13 +7,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\EmployeeRequest;
 use App\Http\Resources\Api\EmployeeResource;
 use App\Models\Employee;
+use App\Services\EmployeeQueryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 
 class EmployeeController extends Controller
@@ -21,6 +21,11 @@ class EmployeeController extends Controller
 
     private int $limit = 500;
     private int $offset = 0;
+
+
+    public function __construct(private readonly EmployeeQueryService $employeeQueryService)
+    {
+    }
 
     /**
      * Display a listing of the resource.
@@ -94,7 +99,7 @@ class EmployeeController extends Controller
             return response()->not_found();
         }
 
-        Employee::deleteRecord($id);
+        Employee::query()->where('id', $id)->delete();
 
         return response()->success([], 202);
     }
@@ -104,7 +109,7 @@ class EmployeeController extends Controller
      */
     public function highestSalaryByCountry($country = null): JsonResponse|AnonymousResourceCollection
     {
-        $employee = Employee::getEmployeesWithHighestSalaryByCountry($country);
+        $employee = $this->employeeQueryService->getEmployeesWithHighestSalaryByCountry($country);
 
         if ($employee->isEmpty()) {
             return response()->not_found();
@@ -118,7 +123,7 @@ class EmployeeController extends Controller
      */
     public function employeeByPosition($position): JsonResponse|AnonymousResourceCollection
     {
-        $employee = Employee::getEmployeesByPositon($position);
+        $employee = $this->employeeQueryService->getEmployeesByPositon($position);
 
         if ($employee->isEmpty()) {
             return response()->not_found();
@@ -133,7 +138,7 @@ class EmployeeController extends Controller
      */
     public function employeePdf($id): Response|JsonResponse
     {
-        $employee = Employee::getEmployeeById($id);
+        $employee = $this->employeeQueryService->getEmployeeById($id);
 
         if (is_null($employee)) {
             return response()->not_found();

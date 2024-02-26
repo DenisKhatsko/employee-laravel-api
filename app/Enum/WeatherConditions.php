@@ -2,7 +2,7 @@
 
 namespace App\Enum;
 
-enum WeatherConditions:int
+enum WeatherConditions: int
 {
     case THUNDERSTORM = 2;
 
@@ -18,9 +18,9 @@ enum WeatherConditions:int
 
     case CLOUDS = 9;
 
-    public static function getRecomendationsByCode($code):string
+    public static function getRecomendationsByCode($code): string
     {
-        $codeGroup = (int)substr($code, 0, 1);
+        $codeGroup = (int) substr($code, 0, 1);
 
         return match ($codeGroup) {
             self::THUNDERSTORM->value => 'Better to stay home',
@@ -34,6 +34,4 @@ enum WeatherConditions:int
         };
 
     }
-
-
 }

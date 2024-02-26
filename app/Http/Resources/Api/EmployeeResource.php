@@ -14,18 +14,17 @@ class EmployeeResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-
-                return [
-                    'id' => $this->id,
-                    'name'=>$this->name,
-                    'age'=>$this->age,
-                    'country'=>$this->country,
-                    'email'=> $this->email,
-                    'salary'=> $this->salary,
-                    'position' =>$this->position,
-                    'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-                    'updated_at' =>$this->updated_at->format('Y-m-d H:i:s'),
-                ];
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'age' => $this->age,
+            'country' => $this->country,
+            'email' => $this->email,
+            'salary' => $this->salary,
+            'position' => $this->position,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
+        ];
 
     }
 }

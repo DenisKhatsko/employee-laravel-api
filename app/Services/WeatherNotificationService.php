@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use App\Enum\WeatherConditions;
-use App\Services\WeatherNotificationInterface;
-use App\Models\Employee;
 
 readonly class WeatherNotificationService
 {

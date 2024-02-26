@@ -19,6 +19,9 @@ class AppServiceProvider extends ServiceProvider
             \App\Services\WeatherNotificationInterface::class,
             \App\Action\WeatherEmailNotificationAction::class
         );
+        if ($this->app->isLocal()) {
+            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+        }
     }
 
     /**

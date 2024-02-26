@@ -31,7 +31,7 @@ class Handler extends ExceptionHandler
         $this->renderable(function (ModelNotFoundException|NotFoundHttpException $e, $request) {
             if ($request->is('api/*')) {
                 Log::channel('api')->error($e->getMessage());
-                return response()->json([], 404);
+                return response()->not_found();
             }
 
         });

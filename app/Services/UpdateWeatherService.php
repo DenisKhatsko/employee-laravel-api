@@ -4,10 +4,8 @@ namespace App\Services;
 
 use App\Action\WeatherApiAction;
 use App\Dto\WeatherDto;
-use App\Models\Employee;
 use App\Models\Weather;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 class UpdateWeatherService
 {
@@ -15,15 +13,15 @@ class UpdateWeatherService
 
     public function __construct(
         protected WeatherApiAction $weatherApiAction,
-        private readonly WeatherDto $weatherDto)
-    {
+        private readonly WeatherDto $weatherDto
+    ) {
     }
 
-    public function handle():void
+    public function handle(): void
     {
         $this->countryList = EmployeeQueryService::getUniqueCountryNames();
 
-        $weatherData =  $this->weatherApiAction->getData($this->countryList);
+        $weatherData = $this->weatherApiAction->getData($this->countryList);
 
         $this->transformData($weatherData);
 
@@ -31,7 +29,7 @@ class UpdateWeatherService
 
     }
 
-    private function transformData(array $weatherData):void
+    private function transformData(array $weatherData): void
     {
         foreach ($weatherData as $country => $data) {
 

@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Models\Employee;
 use Illuminate\Support\Facades\Cache;
 
 class EmployeeObserver
@@ -10,7 +9,7 @@ class EmployeeObserver
     /**
      * Handle the Employee "created" event.
      */
-    public function created(Employee $employee): void
+    public function created(): void
     {
         Cache::forget('employees');
     }
@@ -18,7 +17,7 @@ class EmployeeObserver
     /**
      * Handle the Employee "updated" event.
      */
-    public function updated(Employee $employee): void
+    public function updated(): void
     {
         Cache::forget('employees');
     }
@@ -26,7 +25,7 @@ class EmployeeObserver
     /**
      * Handle the Employee "deleted" event.
      */
-    public function deleted(Employee $employee): void
+    public function deleted(): void
     {
         Cache::forget('employees');
     }

@@ -24,10 +24,10 @@ class EmployeeRequest extends FormRequest
         return [
             'name' => 'required|min:3|max:255',
             'age' => 'required|numeric|min:1|max:99',
-            'country'=>'required|string',
-            'email'=> 'required|email',
-            'salary'=> 'required|numeric|min:1|max:100000',
-            'position' =>'required|string',
+            'country' => 'required|string',
+            'email' => 'required|email',
+            'salary' => 'required|numeric|min:1|max:100000',
+            'position' => 'required|string',
         ];
     }
 }

@@ -2,8 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Services\WeatherNotificationService;
+use Illuminate\Console\Command;
+
 class NotifyEmployee extends Command
 {
     /**

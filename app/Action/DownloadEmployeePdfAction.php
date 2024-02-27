@@ -10,6 +10,7 @@ class DownloadEmployeePdfAction
     public static function getPdf($employee): Response
     {
         $pdf = Pdf::loadView('employee', compact('employee'));
+
         return $pdf->download('employee-'.$employee->id.'.pdf');
     }
 }

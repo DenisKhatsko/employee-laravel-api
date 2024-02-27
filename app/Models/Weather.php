@@ -12,7 +12,6 @@ class Weather extends Model
 
     protected $fillable = ['code', 'description'];
 
-
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'employee_id');

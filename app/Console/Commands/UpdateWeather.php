@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Services\UpdateWeatherService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use App\Services\UpdateWeatherService;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
 class UpdateWeather extends Command
@@ -37,5 +37,4 @@ class UpdateWeather extends Command
 
         return CommandAlias::SUCCESS;
     }
-
 }

@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Employee>
  */
@@ -19,7 +18,7 @@ class EmployeeFactory extends Factory
     {
         return [
             'name' => fake()->name,
-            'age' => fake()->numberBetween(16,80),
+            'age' => fake()->numberBetween(16, 80),
             'country' => fake()->country,
             'email' => fake()->safeEmail,
             'salary' => fake()->numberBetween(100, 10000),

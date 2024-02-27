@@ -128,7 +128,7 @@ return [
 
     'weather_api' => [
         'key' => env('WEATHER_KEY'),
-        'users_quantity' => (int)env('TEST_USERS_QTY', 5)
+        'users_quantity' => (int) env('TEST_USERS_QTY', 5),
     ],
 
     /*

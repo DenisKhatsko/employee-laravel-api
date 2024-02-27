@@ -9,8 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class WeatherFactory extends Factory
 {
-    private static int $i=1;
-
+    private static int $i = 1;
 
     /**
      * Define the model's default state.

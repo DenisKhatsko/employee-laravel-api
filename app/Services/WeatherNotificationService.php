@@ -6,7 +6,6 @@ use App\Enum\WeatherConditions;
 
 readonly class WeatherNotificationService
 {
-
     public function __construct(private WeatherNotificationInterface $notification)
     {
     }

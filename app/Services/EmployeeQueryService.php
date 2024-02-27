@@ -50,5 +50,4 @@ class EmployeeQueryService
     {
         return Employee::query()->with('weather')->get();
     }
-
 }

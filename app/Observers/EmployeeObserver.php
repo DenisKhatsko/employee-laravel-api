@@ -29,6 +29,4 @@ class EmployeeObserver
     {
         Cache::forget('employees');
     }
-
-
 }

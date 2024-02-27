@@ -1,0 +1,479 @@
+name: Endpoints
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/v1/employee
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display a listing of the resource.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '[{"id":1,"name":"Dr. Anais Kling","age":53,"country":"Taiwan","email":"hodkiewicz.declan@example.com","salary":600,"position":"Occupational Therapist Aide","created_at":"2024-02-16 14:01:14","updated_at":"2024-02-16 14:01:14"},{"id":2,"name":"Denis Khatsko","age":44,"country":"Ukraine","email":"d.khatsko@gmail.com","salary":1600,"position":"Middle PHP Back-end Developer","created_at":"2024-02-16 14:01:14","updated_at":"2024-02-27 11:50:11"},{"id":3,"name":"Dr. Skyla Hansen III","age":37,"country":"Guatemala","email":"hassie02@example.org","salary":311,"position":"Ambulance Driver","created_at":"2024-02-16 14:01:14","updated_at":"2024-02-16 14:01:14"},{"id":4,"name":"Gardner Jerde V","age":80,"country":"Haiti","email":"zackery46@example.com","salary":1085,"position":"Gaming Surveillance Officer","created_at":"2024-02-16 14:01:14","updated_at":"2024-02-16 14:01:14"},{"id":6,"name":"Denis Khatsko","age":44,"country":"Ukraine","email":"d.khatsko@gmail.com","salary":1600,"position":"Middle PHP Back-end Developer","created_at":"2024-02-16 14:01:14","updated_at":"2024-02-23 09:11:56"},{"id":7,"name":"Prof. Josefa D''Amore","age":59,"country":"Puerto Rico","email":"nabbott@example.org","salary":3049,"position":"Program Director","created_at":"2024-02-16 14:01:14","updated_at":"2024-02-16 14:01:14"},{"id":8,"name":"Orie Swift","age":52,"country":"Martinique","email":"leopoldo.heidenreich@example.net","salary":1656,"position":"Title Abstractor","created_at":"2024-02-16 14:01:14","updated_at":"2024-02-16 14:01:14"},{"id":9,"name":"Carleton Denesik Jr.","age":74,"country":"Belgium","email":"kgrady@example.org","salary":1273,"position":"Production Planner","created_at":"2024-02-16 14:01:14","updated_at":"2024-02-16 14:01:14"},{"id":10,"name":"Alexane Brekke","age":66,"country":"Liberia","email":"brian.keebler@example.net","salary":426,"position":"Production Laborer","created_at":"2024-02-16 14:01:15","updated_at":"2024-02-16 14:01:15"},{"id":11,"name":"Deanna Howe","age":49,"country":"Heard Island and McDonald Islands","email":"emerson49@example.net","salary":8190,"position":"Transportation Equipment Painters","created_at":"2024-02-16 14:01:15","updated_at":"2024-02-16 14:01:15"},{"id":12,"name":"Laurel Predovic","age":72,"country":"Lebanon","email":"alejandra24@example.com","salary":6086,"position":"Pipe Fitter","created_at":"2024-02-16 14:01:15","updated_at":"2024-02-16 14:01:15"},{"id":13,"name":"Guy Casper DVM","age":59,"country":"Benin","email":"zachery.waelchi@example.net","salary":6155,"position":"Tire Builder","created_at":"2024-02-16 14:01:15","updated_at":"2024-02-16 14:01:15"},{"id":14,"name":"Emilio Daniel","age":58,"country":"Poland","email":"faustino.hoppe@example.com","salary":6122,"position":"Homeland Security","created_at":"2024-02-16 14:01:15","updated_at":"2024-02-16 14:01:15"},{"id":15,"name":"Betsy Nienow","age":17,"country":"Lebanon","email":"liliane53@example.com","salary":5058,"position":"Engineering Technician","created_at":"2024-02-16 14:01:15","updated_at":"2024-02-16 14:01:15"},{"id":16,"name":"Demetris Fay","age":54,"country":"Philippines","email":"uolson@example.com","salary":1616,"position":"Baker","created_at":"2024-02-16 14:01:16","updated_at":"2024-02-16 14:01:16"},{"id":17,"name":"Wilma Mann Jr.","age":43,"country":"Uzbekistan","email":"mertz.guido@example.org","salary":5166,"position":"Accountant","created_at":"2024-02-16 14:01:16","updated_at":"2024-02-16 14:01:16"},{"id":18,"name":"Mr. Broderick Walker","age":53,"country":"Solomon Islands","email":"icarter@example.org","salary":5821,"position":"Machine Operator","created_at":"2024-02-16 14:01:16","updated_at":"2024-02-16 14:01:16"},{"id":19,"name":"Bud Wolff PhD","age":63,"country":"Estonia","email":"uorn@example.net","salary":4534,"position":"Microbiologist","created_at":"2024-02-16 14:01:16","updated_at":"2024-02-16 14:01:16"},{"id":20,"name":"Prof. Randy Dooley","age":34,"country":"British Virgin Islands","email":"franco22@example.org","salary":5398,"position":"Logging Worker","created_at":"2024-02-16 14:01:16","updated_at":"2024-02-16 14:01:16"},{"id":21,"name":"Oliver Grimes IV","age":59,"country":"Fiji","email":"jdickens@example.net","salary":1389,"position":"Service Station Attendant","created_at":"2024-02-16 14:01:16","updated_at":"2024-02-16 14:01:16"},{"id":22,"name":"Ludwig Schamberger","age":59,"country":"Guadeloupe","email":"lilla40@example.com","salary":1539,"position":"Physics Teacher","created_at":"2024-02-16 14:01:16","updated_at":"2024-02-16 14:01:16"},{"id":23,"name":"Hellen Stanton","age":40,"country":"Macedonia","email":"eupton@example.org","salary":1039,"position":"Announcer","created_at":"2024-02-16 14:01:16","updated_at":"2024-02-16 14:01:16"},{"id":24,"name":"Cordelia Dooley","age":28,"country":"Cayman Islands","email":"glen87@example.com","salary":5336,"position":"Computer Scientist","created_at":"2024-02-16 14:01:16","updated_at":"2024-02-16 14:01:16"},{"id":25,"name":"Brenden Bernier","age":53,"country":"American Samoa","email":"victor.stark@example.net","salary":9606,"position":"Segmental Paver","created_at":"2024-02-16 14:01:16","updated_at":"2024-02-16 14:01:16"},{"id":26,"name":"Dr. Alexander Kuhic Jr.","age":41,"country":"Israel","email":"millie.volkman@example.net","salary":2312,"position":"Brazer","created_at":"2024-02-16 14:01:17","updated_at":"2024-02-16 14:01:17"},{"id":27,"name":"Ursula Emard MD","age":70,"country":"Ecuador","email":"yessenia.senger@example.net","salary":8262,"position":"Director Of Marketing","created_at":"2024-02-16 14:01:17","updated_at":"2024-02-16 14:01:17"},{"id":28,"name":"Kory Skiles","age":30,"country":"Saint Kitts and Nevis","email":"lula35@example.com","salary":1401,"position":"Art Teacher","created_at":"2024-02-16 14:01:17","updated_at":"2024-02-16 14:01:17"},{"id":29,"name":"Berniece Harris","age":54,"country":"Monaco","email":"sbaumbach@example.com","salary":3065,"position":"Database Administrator","created_at":"2024-02-16 14:01:17","updated_at":"2024-02-16 14:01:17"},{"id":30,"name":"Mr. Donald Hansen Sr.","age":23,"country":"Cape Verde","email":"fay13@example.com","salary":8529,"position":"Avionics Technician","created_at":"2024-02-16 14:01:17","updated_at":"2024-02-16 14:01:17"},{"id":31,"name":"Macie Gottlieb MD","age":61,"country":"Hong Kong","email":"ldare@example.com","salary":2009,"position":"Electrical Drafter","created_at":"2024-02-16 14:01:17","updated_at":"2024-02-16 14:01:17"},{"id":32,"name":"Ms. Kristy Christiansen","age":62,"country":"New Zealand","email":"pstark@example.com","salary":5838,"position":"Economist","created_at":"2024-02-16 14:01:17","updated_at":"2024-02-16 14:01:17"},{"id":33,"name":"Ms. Emie Rippin","age":52,"country":"Slovenia","email":"jaskolski.sherman@example.com","salary":4936,"position":"Infantry Officer","created_at":"2024-02-16 14:01:17","updated_at":"2024-02-16 14:01:17"},{"id":34,"name":"Bessie Wilkinson Jr.","age":41,"country":"Gibraltar","email":"brandyn68@example.org","salary":8969,"position":"Tool and Die Maker","created_at":"2024-02-16 14:01:18","updated_at":"2024-02-16 14:01:18"},{"id":35,"name":"Dr. Coby Bruen III","age":77,"country":"Mauritius","email":"wyman63@example.org","salary":9294,"position":"Airline Pilot OR Copilot OR Flight Engineer","created_at":"2024-02-16 14:01:18","updated_at":"2024-02-16 14:01:18"},{"id":36,"name":"Mrs. Krystina Oberbrunner I","age":64,"country":"Nauru","email":"vborer@example.net","salary":6737,"position":"Stone Sawyer","created_at":"2024-02-16 14:01:18","updated_at":"2024-02-16 14:01:18"},{"id":37,"name":"Lenna Kuphal","age":50,"country":"Reunion","email":"harmon48@example.net","salary":5452,"position":"Plate Finisher","created_at":"2024-02-16 14:01:18","updated_at":"2024-02-16 14:01:18"},{"id":38,"name":"Dr. Reginald Reinger Sr.","age":39,"country":"Wallis and Futuna","email":"florian61@example.net","salary":6919,"position":"Physicist","created_at":"2024-02-16 14:01:19","updated_at":"2024-02-16 14:01:19"},{"id":39,"name":"Micaela Stanton","age":59,"country":"Niger","email":"alphonso61@example.org","salary":5532,"position":"Geological Sample Test Technician","created_at":"2024-02-16 14:01:19","updated_at":"2024-02-16 14:01:19"},{"id":40,"name":"Brett Zemlak","age":58,"country":"Oman","email":"heaney.geo@example.net","salary":1421,"position":"Typesetting Machine Operator","created_at":"2024-02-16 14:01:19","updated_at":"2024-02-16 14:01:19"},{"id":41,"name":"Dr. Kurtis Toy DDS","age":66,"country":"Anguilla","email":"vgreenholt@example.com","salary":9305,"position":"Rail Transportation Worker","created_at":"2024-02-16 14:01:19","updated_at":"2024-02-16 14:01:19"},{"id":42,"name":"Mr. Nikolas Huel","age":39,"country":"Maldives","email":"gregoria.daniel@example.com","salary":5861,"position":"Educational Psychologist","created_at":"2024-02-16 14:01:19","updated_at":"2024-02-16 14:01:19"},{"id":43,"name":"Hattie Bergnaum I","age":48,"country":"Cayman Islands","email":"cesar06@example.com","salary":8249,"position":"Sketch Artist","created_at":"2024-02-16 14:01:19","updated_at":"2024-02-16 14:01:19"},{"id":44,"name":"Dr. Shyanne Barton MD","age":30,"country":"Grenada","email":"hermina.weber@example.net","salary":7373,"position":"Credit Checker","created_at":"2024-02-16 14:01:20","updated_at":"2024-02-16 14:01:20"},{"id":45,"name":"America Botsford","age":60,"country":"Malaysia","email":"ymurray@example.org","salary":2292,"position":"Hydrologist","created_at":"2024-02-16 14:01:20","updated_at":"2024-02-16 14:01:20"},{"id":46,"name":"Ms. Joyce Towne","age":77,"country":"Tuvalu","email":"gregg73@example.com","salary":1666,"position":"Library Assistant","created_at":"2024-02-16 14:01:20","updated_at":"2024-02-16 14:01:20"},{"id":47,"name":"Liana Lockman","age":20,"country":"Heard Island and McDonald Islands","email":"tconsidine@example.com","salary":9379,"position":"Food Batchmaker","created_at":"2024-02-16 14:01:20","updated_at":"2024-02-16 14:01:20"},{"id":48,"name":"Benton Luettgen","age":42,"country":"Faroe Islands","email":"mafalda04@example.com","salary":6382,"position":"Singer","created_at":"2024-02-16 14:01:20","updated_at":"2024-02-16 14:01:20"},{"id":49,"name":"Bryce Schmeler","age":67,"country":"Greece","email":"bstamm@example.com","salary":969,"position":"Police Detective","created_at":"2024-02-16 14:01:20","updated_at":"2024-02-16 14:01:20"},{"id":50,"name":"Dr. Melissa Frami","age":63,"country":"Macedonia","email":"milo.hauck@example.com","salary":3881,"position":"Mold Maker","created_at":"2024-02-16 14:01:20","updated_at":"2024-02-16 14:01:20"},{"id":51,"name":"Denis","age":45,"country":"Ukraine","email":"denis.khatsko@hotmail.com","salary":1500,"position":"PHP Back-end developer","created_at":"2024-02-23 09:00:16","updated_at":"2024-02-23 09:00:16"},{"id":52,"name":"Denis","age":45,"country":"Ukraine","email":"denis.khatsko@hotmail.com","salary":1500,"position":"PHP Back-end developer","created_at":"2024-02-27 11:56:16","updated_at":"2024-02-27 11:56:16"},{"id":53,"name":"Denis","age":45,"country":"Ukraine","email":"denis.khatsko@hotmail.com","salary":1500,"position":"PHP Back-end developer","created_at":"2024-02-27 12:16:54","updated_at":"2024-02-27 12:16:54"},{"id":54,"name":"Denis","age":45,"country":"Ukraine","email":"denis.khatsko@hotmail.com","salary":1500,"position":"PHP Back-end developer","created_at":"2024-02-27 12:17:11","updated_at":"2024-02-27 12:17:11"}]'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '59'
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/v1/employee
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Store a newly created resource in storage.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: 'Must be at least 3 characters. Must not be greater than 255 characters.'
+        required: true
+        example: aaxqqpcpwfxcszlyyucxmwjo
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      age:
+        name: age
+        description: 'Must be at least 1. Must not be greater than 99.'
+        required: true
+        example: 21
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      country:
+        name: country
+        description: ''
+        required: true
+        example: est
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      email:
+        name: email
+        description: 'Must be a valid email address.'
+        required: true
+        example: mary.ortiz@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      salary:
+        name: salary
+        description: 'Must be at least 1. Must not be greater than 100000.'
+        required: true
+        example: 19
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      position:
+        name: position
+        description: ''
+        required: true
+        example: autem
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanBodyParameters:
+      name: aaxqqpcpwfxcszlyyucxmwjo
+      age: 21
+      country: est
+      email: mary.ortiz@example.com
+      salary: 19
+      position: autem
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/v1/employee/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display the specified resource.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the employee.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '{"id":1,"name":"Dr. Anais Kling","age":53,"country":"Taiwan","email":"hodkiewicz.declan@example.com","salary":600,"position":"Occupational Therapist Aide","created_at":"2024-02-16 14:01:14","updated_at":"2024-02-16 14:01:14"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '58'
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/v1/employee/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update the specified resource in storage.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the employee.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: 'Must be at least 3 characters. Must not be greater than 255 characters.'
+        required: true
+        example: ueqjkynjvseg
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      age:
+        name: age
+        description: 'Must be at least 1. Must not be greater than 99.'
+        required: true
+        example: 5
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      country:
+        name: country
+        description: ''
+        required: true
+        example: quidem
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      email:
+        name: email
+        description: 'Must be a valid email address.'
+        required: true
+        example: labernathy@example.org
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      salary:
+        name: salary
+        description: 'Must be at least 1. Must not be greater than 100000.'
+        required: true
+        example: 3
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      position:
+        name: position
+        description: ''
+        required: true
+        example: quod
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanBodyParameters:
+      name: ueqjkynjvseg
+      age: 5
+      country: quidem
+      email: labernathy@example.org
+      salary: 3
+      position: quod
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/v1/employee/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Remove the specified resource from storage.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the employee.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/v1/employee-top-salary/{country?}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Getting employees with the highest salary by country. All countries, or by one country if in url'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      country:
+        name: country
+        description: ''
+        required: false
+        example: a
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      country: a
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 404
+        content: '[]'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '57'
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/v1/employee/position/{position}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Getting employees list by position name requested.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      position:
+        name: position
+        description: 'The position.'
+        required: true
+        example: nobis
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      position: nobis
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 404
+        content: '[]'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '56'
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/v1/employee-pdf/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Generate PDF profile file for employee requested by ID.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the employee pdf.'
+        required: true
+        example: velit
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      id: velit
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 404
+        content: '[]'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-ratelimit-limit: '60'
+          x-ratelimit-remaining: '55'
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

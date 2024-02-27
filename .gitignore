@@ -17,3 +17,6 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+/.phpstorm.meta.php
+/.php-cs-fixer.cache
+/database.sqlite

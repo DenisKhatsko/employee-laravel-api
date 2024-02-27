@@ -1,0 +1,1929 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Employee resource handling plus weather notification service</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../docs/css/theme-default.style.css" media="screen">
+    <link rel="stylesheet" href="../docs/css/theme-default.print.css" media="print">
+
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/@highlightjs/cdn-assets@11.6.0/styles/obsidian.min.css">
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@11.6.0/highlight.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jets/0.14.1/jets.min.js"></script>
+
+    <style id="language-style">
+        /* starts out as display none and is replaced with js later  */
+                    body .content .bash-example code { display: none; }
+                    body .content .javascript-example code { display: none; }
+            </style>
+
+    <script>
+        var tryItOutBaseUrl = "http://127.0.0.1:8000";
+        var useCsrf = Boolean();
+        var csrfUrl = "/sanctum/csrf-cookie";
+    </script>
+    <script src="../docs/js/tryitout-4.32.0.js"></script>
+
+    <script src="../docs/js/theme-default-4.32.0.js"></script>
+
+</head>
+
+<body data-languages="[&quot;bash&quot;,&quot;javascript&quot;]">
+
+<a href="#" id="nav-button">
+    <span>
+        MENU
+        <img src="../docs/images/navbar.png" alt="navbar-image"/>
+    </span>
+</a>
+<div class="tocify-wrapper">
+    
+            <div class="lang-selector">
+                                            <button type="button" class="lang-button" data-language-name="bash">bash</button>
+                                            <button type="button" class="lang-button" data-language-name="javascript">javascript</button>
+                    </div>
+    
+    <div class="search">
+        <input type="text" class="search" id="input-search" placeholder="Search">
+    </div>
+
+    <div id="toc">
+                    <ul id="tocify-header-introduction" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="introduction">
+                    <a href="#introduction">Introduction</a>
+                </li>
+                            </ul>
+                    <ul id="tocify-header-authenticating-requests" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="authenticating-requests">
+                    <a href="#authenticating-requests">Authenticating requests</a>
+                </li>
+                            </ul>
+                    <ul id="tocify-header-endpoints" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="endpoints">
+                    <a href="#endpoints">Endpoints</a>
+                </li>
+                                    <ul id="tocify-subheader-endpoints" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="endpoints-GETapi-v1-employee">
+                                <a href="#endpoints-GETapi-v1-employee">Display a listing of the resource.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-POSTapi-v1-employee">
+                                <a href="#endpoints-POSTapi-v1-employee">Store a newly created resource in storage.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-v1-employee--id-">
+                                <a href="#endpoints-GETapi-v1-employee--id-">Display the specified resource.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-PUTapi-v1-employee--id-">
+                                <a href="#endpoints-PUTapi-v1-employee--id-">Update the specified resource in storage.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-DELETEapi-v1-employee--id-">
+                                <a href="#endpoints-DELETEapi-v1-employee--id-">Remove the specified resource from storage.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-v1-employee-top-salary--country--">
+                                <a href="#endpoints-GETapi-v1-employee-top-salary--country--">Getting employees with the highest salary by country. All countries, or by one country if in url</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-v1-employee-position--position-">
+                                <a href="#endpoints-GETapi-v1-employee-position--position-">Getting employees list by position name requested.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-v1-employee-pdf--id-">
+                                <a href="#endpoints-GETapi-v1-employee-pdf--id-">Generate PDF profile file for employee requested by ID.</a>
+                            </li>
+                                                                        </ul>
+                            </ul>
+            </div>
+
+    <ul class="toc-footer" id="toc-footer">
+                    <li style="padding-bottom: 5px;"><a href="../docs/collection.json">View Postman collection</a></li>
+                            <li style="padding-bottom: 5px;"><a href="../docs/openapi.yaml">View OpenAPI spec</a></li>
+                <li><a href="http://github.com/knuckleswtf/scribe">Documentation powered by Scribe ✍</a></li>
+    </ul>
+
+    <ul class="toc-footer" id="last-updated">
+        <li>Last updated: February 27, 2024</li>
+    </ul>
+</div>
+
+<div class="page-wrapper">
+    <div class="dark-box"></div>
+    <div class="content">
+        <h1 id="introduction">Introduction</h1>
+<aside>
+    <strong>Base URL</strong>: <code>http://127.0.0.1:8000</code>
+</aside>
+<p>This documentation aims to provide all the information you need to work with our API.</p>
+<aside>As you scroll, you'll see code examples for working with the API in different programming languages in the dark area to the right (or as part of the content on mobile).
+You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).</aside>
+
+        <h1 id="authenticating-requests">Authenticating requests</h1>
+<p>This API is not authenticated.</p>
+
+        <h1 id="endpoints">Endpoints</h1>
+
+    
+
+                                <h2 id="endpoints-GETapi-v1-employee">Display a listing of the resource.</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-GETapi-v1-employee">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://127.0.0.1:8000/api/v1/employee" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/v1/employee"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-employee">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+x-ratelimit-limit: 60
+x-ratelimit-remaining: 59
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">[
+    {
+        &quot;id&quot;: 1,
+        &quot;name&quot;: &quot;Dr. Anais Kling&quot;,
+        &quot;age&quot;: 53,
+        &quot;country&quot;: &quot;Taiwan&quot;,
+        &quot;email&quot;: &quot;hodkiewicz.declan@example.com&quot;,
+        &quot;salary&quot;: 600,
+        &quot;position&quot;: &quot;Occupational Therapist Aide&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:14&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:14&quot;
+    },
+    {
+        &quot;id&quot;: 2,
+        &quot;name&quot;: &quot;Denis Khatsko&quot;,
+        &quot;age&quot;: 44,
+        &quot;country&quot;: &quot;Ukraine&quot;,
+        &quot;email&quot;: &quot;d.khatsko@gmail.com&quot;,
+        &quot;salary&quot;: 1600,
+        &quot;position&quot;: &quot;Middle PHP Back-end Developer&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:14&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-27 11:50:11&quot;
+    },
+    {
+        &quot;id&quot;: 3,
+        &quot;name&quot;: &quot;Dr. Skyla Hansen III&quot;,
+        &quot;age&quot;: 37,
+        &quot;country&quot;: &quot;Guatemala&quot;,
+        &quot;email&quot;: &quot;hassie02@example.org&quot;,
+        &quot;salary&quot;: 311,
+        &quot;position&quot;: &quot;Ambulance Driver&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:14&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:14&quot;
+    },
+    {
+        &quot;id&quot;: 4,
+        &quot;name&quot;: &quot;Gardner Jerde V&quot;,
+        &quot;age&quot;: 80,
+        &quot;country&quot;: &quot;Haiti&quot;,
+        &quot;email&quot;: &quot;zackery46@example.com&quot;,
+        &quot;salary&quot;: 1085,
+        &quot;position&quot;: &quot;Gaming Surveillance Officer&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:14&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:14&quot;
+    },
+    {
+        &quot;id&quot;: 6,
+        &quot;name&quot;: &quot;Denis Khatsko&quot;,
+        &quot;age&quot;: 44,
+        &quot;country&quot;: &quot;Ukraine&quot;,
+        &quot;email&quot;: &quot;d.khatsko@gmail.com&quot;,
+        &quot;salary&quot;: 1600,
+        &quot;position&quot;: &quot;Middle PHP Back-end Developer&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:14&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-23 09:11:56&quot;
+    },
+    {
+        &quot;id&quot;: 7,
+        &quot;name&quot;: &quot;Prof. Josefa D&#039;Amore&quot;,
+        &quot;age&quot;: 59,
+        &quot;country&quot;: &quot;Puerto Rico&quot;,
+        &quot;email&quot;: &quot;nabbott@example.org&quot;,
+        &quot;salary&quot;: 3049,
+        &quot;position&quot;: &quot;Program Director&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:14&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:14&quot;
+    },
+    {
+        &quot;id&quot;: 8,
+        &quot;name&quot;: &quot;Orie Swift&quot;,
+        &quot;age&quot;: 52,
+        &quot;country&quot;: &quot;Martinique&quot;,
+        &quot;email&quot;: &quot;leopoldo.heidenreich@example.net&quot;,
+        &quot;salary&quot;: 1656,
+        &quot;position&quot;: &quot;Title Abstractor&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:14&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:14&quot;
+    },
+    {
+        &quot;id&quot;: 9,
+        &quot;name&quot;: &quot;Carleton Denesik Jr.&quot;,
+        &quot;age&quot;: 74,
+        &quot;country&quot;: &quot;Belgium&quot;,
+        &quot;email&quot;: &quot;kgrady@example.org&quot;,
+        &quot;salary&quot;: 1273,
+        &quot;position&quot;: &quot;Production Planner&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:14&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:14&quot;
+    },
+    {
+        &quot;id&quot;: 10,
+        &quot;name&quot;: &quot;Alexane Brekke&quot;,
+        &quot;age&quot;: 66,
+        &quot;country&quot;: &quot;Liberia&quot;,
+        &quot;email&quot;: &quot;brian.keebler@example.net&quot;,
+        &quot;salary&quot;: 426,
+        &quot;position&quot;: &quot;Production Laborer&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:15&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:15&quot;
+    },
+    {
+        &quot;id&quot;: 11,
+        &quot;name&quot;: &quot;Deanna Howe&quot;,
+        &quot;age&quot;: 49,
+        &quot;country&quot;: &quot;Heard Island and McDonald Islands&quot;,
+        &quot;email&quot;: &quot;emerson49@example.net&quot;,
+        &quot;salary&quot;: 8190,
+        &quot;position&quot;: &quot;Transportation Equipment Painters&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:15&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:15&quot;
+    },
+    {
+        &quot;id&quot;: 12,
+        &quot;name&quot;: &quot;Laurel Predovic&quot;,
+        &quot;age&quot;: 72,
+        &quot;country&quot;: &quot;Lebanon&quot;,
+        &quot;email&quot;: &quot;alejandra24@example.com&quot;,
+        &quot;salary&quot;: 6086,
+        &quot;position&quot;: &quot;Pipe Fitter&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:15&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:15&quot;
+    },
+    {
+        &quot;id&quot;: 13,
+        &quot;name&quot;: &quot;Guy Casper DVM&quot;,
+        &quot;age&quot;: 59,
+        &quot;country&quot;: &quot;Benin&quot;,
+        &quot;email&quot;: &quot;zachery.waelchi@example.net&quot;,
+        &quot;salary&quot;: 6155,
+        &quot;position&quot;: &quot;Tire Builder&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:15&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:15&quot;
+    },
+    {
+        &quot;id&quot;: 14,
+        &quot;name&quot;: &quot;Emilio Daniel&quot;,
+        &quot;age&quot;: 58,
+        &quot;country&quot;: &quot;Poland&quot;,
+        &quot;email&quot;: &quot;faustino.hoppe@example.com&quot;,
+        &quot;salary&quot;: 6122,
+        &quot;position&quot;: &quot;Homeland Security&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:15&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:15&quot;
+    },
+    {
+        &quot;id&quot;: 15,
+        &quot;name&quot;: &quot;Betsy Nienow&quot;,
+        &quot;age&quot;: 17,
+        &quot;country&quot;: &quot;Lebanon&quot;,
+        &quot;email&quot;: &quot;liliane53@example.com&quot;,
+        &quot;salary&quot;: 5058,
+        &quot;position&quot;: &quot;Engineering Technician&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:15&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:15&quot;
+    },
+    {
+        &quot;id&quot;: 16,
+        &quot;name&quot;: &quot;Demetris Fay&quot;,
+        &quot;age&quot;: 54,
+        &quot;country&quot;: &quot;Philippines&quot;,
+        &quot;email&quot;: &quot;uolson@example.com&quot;,
+        &quot;salary&quot;: 1616,
+        &quot;position&quot;: &quot;Baker&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:16&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:16&quot;
+    },
+    {
+        &quot;id&quot;: 17,
+        &quot;name&quot;: &quot;Wilma Mann Jr.&quot;,
+        &quot;age&quot;: 43,
+        &quot;country&quot;: &quot;Uzbekistan&quot;,
+        &quot;email&quot;: &quot;mertz.guido@example.org&quot;,
+        &quot;salary&quot;: 5166,
+        &quot;position&quot;: &quot;Accountant&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:16&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:16&quot;
+    },
+    {
+        &quot;id&quot;: 18,
+        &quot;name&quot;: &quot;Mr. Broderick Walker&quot;,
+        &quot;age&quot;: 53,
+        &quot;country&quot;: &quot;Solomon Islands&quot;,
+        &quot;email&quot;: &quot;icarter@example.org&quot;,
+        &quot;salary&quot;: 5821,
+        &quot;position&quot;: &quot;Machine Operator&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:16&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:16&quot;
+    },
+    {
+        &quot;id&quot;: 19,
+        &quot;name&quot;: &quot;Bud Wolff PhD&quot;,
+        &quot;age&quot;: 63,
+        &quot;country&quot;: &quot;Estonia&quot;,
+        &quot;email&quot;: &quot;uorn@example.net&quot;,
+        &quot;salary&quot;: 4534,
+        &quot;position&quot;: &quot;Microbiologist&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:16&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:16&quot;
+    },
+    {
+        &quot;id&quot;: 20,
+        &quot;name&quot;: &quot;Prof. Randy Dooley&quot;,
+        &quot;age&quot;: 34,
+        &quot;country&quot;: &quot;British Virgin Islands&quot;,
+        &quot;email&quot;: &quot;franco22@example.org&quot;,
+        &quot;salary&quot;: 5398,
+        &quot;position&quot;: &quot;Logging Worker&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:16&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:16&quot;
+    },
+    {
+        &quot;id&quot;: 21,
+        &quot;name&quot;: &quot;Oliver Grimes IV&quot;,
+        &quot;age&quot;: 59,
+        &quot;country&quot;: &quot;Fiji&quot;,
+        &quot;email&quot;: &quot;jdickens@example.net&quot;,
+        &quot;salary&quot;: 1389,
+        &quot;position&quot;: &quot;Service Station Attendant&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:16&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:16&quot;
+    },
+    {
+        &quot;id&quot;: 22,
+        &quot;name&quot;: &quot;Ludwig Schamberger&quot;,
+        &quot;age&quot;: 59,
+        &quot;country&quot;: &quot;Guadeloupe&quot;,
+        &quot;email&quot;: &quot;lilla40@example.com&quot;,
+        &quot;salary&quot;: 1539,
+        &quot;position&quot;: &quot;Physics Teacher&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:16&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:16&quot;
+    },
+    {
+        &quot;id&quot;: 23,
+        &quot;name&quot;: &quot;Hellen Stanton&quot;,
+        &quot;age&quot;: 40,
+        &quot;country&quot;: &quot;Macedonia&quot;,
+        &quot;email&quot;: &quot;eupton@example.org&quot;,
+        &quot;salary&quot;: 1039,
+        &quot;position&quot;: &quot;Announcer&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:16&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:16&quot;
+    },
+    {
+        &quot;id&quot;: 24,
+        &quot;name&quot;: &quot;Cordelia Dooley&quot;,
+        &quot;age&quot;: 28,
+        &quot;country&quot;: &quot;Cayman Islands&quot;,
+        &quot;email&quot;: &quot;glen87@example.com&quot;,
+        &quot;salary&quot;: 5336,
+        &quot;position&quot;: &quot;Computer Scientist&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:16&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:16&quot;
+    },
+    {
+        &quot;id&quot;: 25,
+        &quot;name&quot;: &quot;Brenden Bernier&quot;,
+        &quot;age&quot;: 53,
+        &quot;country&quot;: &quot;American Samoa&quot;,
+        &quot;email&quot;: &quot;victor.stark@example.net&quot;,
+        &quot;salary&quot;: 9606,
+        &quot;position&quot;: &quot;Segmental Paver&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:16&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:16&quot;
+    },
+    {
+        &quot;id&quot;: 26,
+        &quot;name&quot;: &quot;Dr. Alexander Kuhic Jr.&quot;,
+        &quot;age&quot;: 41,
+        &quot;country&quot;: &quot;Israel&quot;,
+        &quot;email&quot;: &quot;millie.volkman@example.net&quot;,
+        &quot;salary&quot;: 2312,
+        &quot;position&quot;: &quot;Brazer&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:17&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:17&quot;
+    },
+    {
+        &quot;id&quot;: 27,
+        &quot;name&quot;: &quot;Ursula Emard MD&quot;,
+        &quot;age&quot;: 70,
+        &quot;country&quot;: &quot;Ecuador&quot;,
+        &quot;email&quot;: &quot;yessenia.senger@example.net&quot;,
+        &quot;salary&quot;: 8262,
+        &quot;position&quot;: &quot;Director Of Marketing&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:17&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:17&quot;
+    },
+    {
+        &quot;id&quot;: 28,
+        &quot;name&quot;: &quot;Kory Skiles&quot;,
+        &quot;age&quot;: 30,
+        &quot;country&quot;: &quot;Saint Kitts and Nevis&quot;,
+        &quot;email&quot;: &quot;lula35@example.com&quot;,
+        &quot;salary&quot;: 1401,
+        &quot;position&quot;: &quot;Art Teacher&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:17&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:17&quot;
+    },
+    {
+        &quot;id&quot;: 29,
+        &quot;name&quot;: &quot;Berniece Harris&quot;,
+        &quot;age&quot;: 54,
+        &quot;country&quot;: &quot;Monaco&quot;,
+        &quot;email&quot;: &quot;sbaumbach@example.com&quot;,
+        &quot;salary&quot;: 3065,
+        &quot;position&quot;: &quot;Database Administrator&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:17&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:17&quot;
+    },
+    {
+        &quot;id&quot;: 30,
+        &quot;name&quot;: &quot;Mr. Donald Hansen Sr.&quot;,
+        &quot;age&quot;: 23,
+        &quot;country&quot;: &quot;Cape Verde&quot;,
+        &quot;email&quot;: &quot;fay13@example.com&quot;,
+        &quot;salary&quot;: 8529,
+        &quot;position&quot;: &quot;Avionics Technician&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:17&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:17&quot;
+    },
+    {
+        &quot;id&quot;: 31,
+        &quot;name&quot;: &quot;Macie Gottlieb MD&quot;,
+        &quot;age&quot;: 61,
+        &quot;country&quot;: &quot;Hong Kong&quot;,
+        &quot;email&quot;: &quot;ldare@example.com&quot;,
+        &quot;salary&quot;: 2009,
+        &quot;position&quot;: &quot;Electrical Drafter&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:17&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:17&quot;
+    },
+    {
+        &quot;id&quot;: 32,
+        &quot;name&quot;: &quot;Ms. Kristy Christiansen&quot;,
+        &quot;age&quot;: 62,
+        &quot;country&quot;: &quot;New Zealand&quot;,
+        &quot;email&quot;: &quot;pstark@example.com&quot;,
+        &quot;salary&quot;: 5838,
+        &quot;position&quot;: &quot;Economist&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:17&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:17&quot;
+    },
+    {
+        &quot;id&quot;: 33,
+        &quot;name&quot;: &quot;Ms. Emie Rippin&quot;,
+        &quot;age&quot;: 52,
+        &quot;country&quot;: &quot;Slovenia&quot;,
+        &quot;email&quot;: &quot;jaskolski.sherman@example.com&quot;,
+        &quot;salary&quot;: 4936,
+        &quot;position&quot;: &quot;Infantry Officer&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:17&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:17&quot;
+    },
+    {
+        &quot;id&quot;: 34,
+        &quot;name&quot;: &quot;Bessie Wilkinson Jr.&quot;,
+        &quot;age&quot;: 41,
+        &quot;country&quot;: &quot;Gibraltar&quot;,
+        &quot;email&quot;: &quot;brandyn68@example.org&quot;,
+        &quot;salary&quot;: 8969,
+        &quot;position&quot;: &quot;Tool and Die Maker&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:18&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:18&quot;
+    },
+    {
+        &quot;id&quot;: 35,
+        &quot;name&quot;: &quot;Dr. Coby Bruen III&quot;,
+        &quot;age&quot;: 77,
+        &quot;country&quot;: &quot;Mauritius&quot;,
+        &quot;email&quot;: &quot;wyman63@example.org&quot;,
+        &quot;salary&quot;: 9294,
+        &quot;position&quot;: &quot;Airline Pilot OR Copilot OR Flight Engineer&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:18&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:18&quot;
+    },
+    {
+        &quot;id&quot;: 36,
+        &quot;name&quot;: &quot;Mrs. Krystina Oberbrunner I&quot;,
+        &quot;age&quot;: 64,
+        &quot;country&quot;: &quot;Nauru&quot;,
+        &quot;email&quot;: &quot;vborer@example.net&quot;,
+        &quot;salary&quot;: 6737,
+        &quot;position&quot;: &quot;Stone Sawyer&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:18&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:18&quot;
+    },
+    {
+        &quot;id&quot;: 37,
+        &quot;name&quot;: &quot;Lenna Kuphal&quot;,
+        &quot;age&quot;: 50,
+        &quot;country&quot;: &quot;Reunion&quot;,
+        &quot;email&quot;: &quot;harmon48@example.net&quot;,
+        &quot;salary&quot;: 5452,
+        &quot;position&quot;: &quot;Plate Finisher&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:18&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:18&quot;
+    },
+    {
+        &quot;id&quot;: 38,
+        &quot;name&quot;: &quot;Dr. Reginald Reinger Sr.&quot;,
+        &quot;age&quot;: 39,
+        &quot;country&quot;: &quot;Wallis and Futuna&quot;,
+        &quot;email&quot;: &quot;florian61@example.net&quot;,
+        &quot;salary&quot;: 6919,
+        &quot;position&quot;: &quot;Physicist&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:19&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:19&quot;
+    },
+    {
+        &quot;id&quot;: 39,
+        &quot;name&quot;: &quot;Micaela Stanton&quot;,
+        &quot;age&quot;: 59,
+        &quot;country&quot;: &quot;Niger&quot;,
+        &quot;email&quot;: &quot;alphonso61@example.org&quot;,
+        &quot;salary&quot;: 5532,
+        &quot;position&quot;: &quot;Geological Sample Test Technician&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:19&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:19&quot;
+    },
+    {
+        &quot;id&quot;: 40,
+        &quot;name&quot;: &quot;Brett Zemlak&quot;,
+        &quot;age&quot;: 58,
+        &quot;country&quot;: &quot;Oman&quot;,
+        &quot;email&quot;: &quot;heaney.geo@example.net&quot;,
+        &quot;salary&quot;: 1421,
+        &quot;position&quot;: &quot;Typesetting Machine Operator&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:19&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:19&quot;
+    },
+    {
+        &quot;id&quot;: 41,
+        &quot;name&quot;: &quot;Dr. Kurtis Toy DDS&quot;,
+        &quot;age&quot;: 66,
+        &quot;country&quot;: &quot;Anguilla&quot;,
+        &quot;email&quot;: &quot;vgreenholt@example.com&quot;,
+        &quot;salary&quot;: 9305,
+        &quot;position&quot;: &quot;Rail Transportation Worker&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:19&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:19&quot;
+    },
+    {
+        &quot;id&quot;: 42,
+        &quot;name&quot;: &quot;Mr. Nikolas Huel&quot;,
+        &quot;age&quot;: 39,
+        &quot;country&quot;: &quot;Maldives&quot;,
+        &quot;email&quot;: &quot;gregoria.daniel@example.com&quot;,
+        &quot;salary&quot;: 5861,
+        &quot;position&quot;: &quot;Educational Psychologist&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:19&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:19&quot;
+    },
+    {
+        &quot;id&quot;: 43,
+        &quot;name&quot;: &quot;Hattie Bergnaum I&quot;,
+        &quot;age&quot;: 48,
+        &quot;country&quot;: &quot;Cayman Islands&quot;,
+        &quot;email&quot;: &quot;cesar06@example.com&quot;,
+        &quot;salary&quot;: 8249,
+        &quot;position&quot;: &quot;Sketch Artist&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:19&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:19&quot;
+    },
+    {
+        &quot;id&quot;: 44,
+        &quot;name&quot;: &quot;Dr. Shyanne Barton MD&quot;,
+        &quot;age&quot;: 30,
+        &quot;country&quot;: &quot;Grenada&quot;,
+        &quot;email&quot;: &quot;hermina.weber@example.net&quot;,
+        &quot;salary&quot;: 7373,
+        &quot;position&quot;: &quot;Credit Checker&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:20&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:20&quot;
+    },
+    {
+        &quot;id&quot;: 45,
+        &quot;name&quot;: &quot;America Botsford&quot;,
+        &quot;age&quot;: 60,
+        &quot;country&quot;: &quot;Malaysia&quot;,
+        &quot;email&quot;: &quot;ymurray@example.org&quot;,
+        &quot;salary&quot;: 2292,
+        &quot;position&quot;: &quot;Hydrologist&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:20&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:20&quot;
+    },
+    {
+        &quot;id&quot;: 46,
+        &quot;name&quot;: &quot;Ms. Joyce Towne&quot;,
+        &quot;age&quot;: 77,
+        &quot;country&quot;: &quot;Tuvalu&quot;,
+        &quot;email&quot;: &quot;gregg73@example.com&quot;,
+        &quot;salary&quot;: 1666,
+        &quot;position&quot;: &quot;Library Assistant&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:20&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:20&quot;
+    },
+    {
+        &quot;id&quot;: 47,
+        &quot;name&quot;: &quot;Liana Lockman&quot;,
+        &quot;age&quot;: 20,
+        &quot;country&quot;: &quot;Heard Island and McDonald Islands&quot;,
+        &quot;email&quot;: &quot;tconsidine@example.com&quot;,
+        &quot;salary&quot;: 9379,
+        &quot;position&quot;: &quot;Food Batchmaker&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:20&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:20&quot;
+    },
+    {
+        &quot;id&quot;: 48,
+        &quot;name&quot;: &quot;Benton Luettgen&quot;,
+        &quot;age&quot;: 42,
+        &quot;country&quot;: &quot;Faroe Islands&quot;,
+        &quot;email&quot;: &quot;mafalda04@example.com&quot;,
+        &quot;salary&quot;: 6382,
+        &quot;position&quot;: &quot;Singer&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:20&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:20&quot;
+    },
+    {
+        &quot;id&quot;: 49,
+        &quot;name&quot;: &quot;Bryce Schmeler&quot;,
+        &quot;age&quot;: 67,
+        &quot;country&quot;: &quot;Greece&quot;,
+        &quot;email&quot;: &quot;bstamm@example.com&quot;,
+        &quot;salary&quot;: 969,
+        &quot;position&quot;: &quot;Police Detective&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:20&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:20&quot;
+    },
+    {
+        &quot;id&quot;: 50,
+        &quot;name&quot;: &quot;Dr. Melissa Frami&quot;,
+        &quot;age&quot;: 63,
+        &quot;country&quot;: &quot;Macedonia&quot;,
+        &quot;email&quot;: &quot;milo.hauck@example.com&quot;,
+        &quot;salary&quot;: 3881,
+        &quot;position&quot;: &quot;Mold Maker&quot;,
+        &quot;created_at&quot;: &quot;2024-02-16 14:01:20&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-16 14:01:20&quot;
+    },
+    {
+        &quot;id&quot;: 51,
+        &quot;name&quot;: &quot;Denis&quot;,
+        &quot;age&quot;: 45,
+        &quot;country&quot;: &quot;Ukraine&quot;,
+        &quot;email&quot;: &quot;denis.khatsko@hotmail.com&quot;,
+        &quot;salary&quot;: 1500,
+        &quot;position&quot;: &quot;PHP Back-end developer&quot;,
+        &quot;created_at&quot;: &quot;2024-02-23 09:00:16&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-23 09:00:16&quot;
+    },
+    {
+        &quot;id&quot;: 52,
+        &quot;name&quot;: &quot;Denis&quot;,
+        &quot;age&quot;: 45,
+        &quot;country&quot;: &quot;Ukraine&quot;,
+        &quot;email&quot;: &quot;denis.khatsko@hotmail.com&quot;,
+        &quot;salary&quot;: 1500,
+        &quot;position&quot;: &quot;PHP Back-end developer&quot;,
+        &quot;created_at&quot;: &quot;2024-02-27 11:56:16&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-27 11:56:16&quot;
+    },
+    {
+        &quot;id&quot;: 53,
+        &quot;name&quot;: &quot;Denis&quot;,
+        &quot;age&quot;: 45,
+        &quot;country&quot;: &quot;Ukraine&quot;,
+        &quot;email&quot;: &quot;denis.khatsko@hotmail.com&quot;,
+        &quot;salary&quot;: 1500,
+        &quot;position&quot;: &quot;PHP Back-end developer&quot;,
+        &quot;created_at&quot;: &quot;2024-02-27 12:16:54&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-27 12:16:54&quot;
+    },
+    {
+        &quot;id&quot;: 54,
+        &quot;name&quot;: &quot;Denis&quot;,
+        &quot;age&quot;: 45,
+        &quot;country&quot;: &quot;Ukraine&quot;,
+        &quot;email&quot;: &quot;denis.khatsko@hotmail.com&quot;,
+        &quot;salary&quot;: 1500,
+        &quot;position&quot;: &quot;PHP Back-end developer&quot;,
+        &quot;created_at&quot;: &quot;2024-02-27 12:17:11&quot;,
+        &quot;updated_at&quot;: &quot;2024-02-27 12:17:11&quot;
+    }
+]</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-employee" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-employee"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-employee"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-employee" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-employee">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-employee" data-method="GET"
+      data-path="api/v1/employee"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-employee', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-employee"
+                    onclick="tryItOut('GETapi-v1-employee');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-employee"
+                    onclick="cancelTryOut('GETapi-v1-employee');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-employee"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/employee</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-employee"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-employee"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="endpoints-POSTapi-v1-employee">Store a newly created resource in storage.</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-POSTapi-v1-employee">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://127.0.0.1:8000/api/v1/employee" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"name\": \"aaxqqpcpwfxcszlyyucxmwjo\",
+    \"age\": 21,
+    \"country\": \"est\",
+    \"email\": \"mary.ortiz@example.com\",
+    \"salary\": 19,
+    \"position\": \"autem\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/v1/employee"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "aaxqqpcpwfxcszlyyucxmwjo",
+    "age": 21,
+    "country": "est",
+    "email": "mary.ortiz@example.com",
+    "salary": 19,
+    "position": "autem"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-v1-employee">
+</span>
+<span id="execution-results-POSTapi-v1-employee" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-employee"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-employee"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-v1-employee" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-employee">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-v1-employee" data-method="POST"
+      data-path="api/v1/employee"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-employee', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-employee"
+                    onclick="tryItOut('POSTapi-v1-employee');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-employee"
+                    onclick="cancelTryOut('POSTapi-v1-employee');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-employee"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/employee</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-employee"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-employee"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="POSTapi-v1-employee"
+               value="aaxqqpcpwfxcszlyyucxmwjo"
+               data-component="body">
+    <br>
+<p>Must be at least 3 characters. Must not be greater than 255 characters. Example: <code>aaxqqpcpwfxcszlyyucxmwjo</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>age</code></b>&nbsp;&nbsp;
+<small>number</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="age"                data-endpoint="POSTapi-v1-employee"
+               value="21"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Must not be greater than 99. Example: <code>21</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>country</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="country"                data-endpoint="POSTapi-v1-employee"
+               value="est"
+               data-component="body">
+    <br>
+<p>Example: <code>est</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="email"                data-endpoint="POSTapi-v1-employee"
+               value="mary.ortiz@example.com"
+               data-component="body">
+    <br>
+<p>Must be a valid email address. Example: <code>mary.ortiz@example.com</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>salary</code></b>&nbsp;&nbsp;
+<small>number</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="salary"                data-endpoint="POSTapi-v1-employee"
+               value="19"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Must not be greater than 100000. Example: <code>19</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>position</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="position"                data-endpoint="POSTapi-v1-employee"
+               value="autem"
+               data-component="body">
+    <br>
+<p>Example: <code>autem</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-GETapi-v1-employee--id-">Display the specified resource.</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-GETapi-v1-employee--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://127.0.0.1:8000/api/v1/employee/1" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/v1/employee/1"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-employee--id-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+x-ratelimit-limit: 60
+x-ratelimit-remaining: 58
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;id&quot;: 1,
+    &quot;name&quot;: &quot;Dr. Anais Kling&quot;,
+    &quot;age&quot;: 53,
+    &quot;country&quot;: &quot;Taiwan&quot;,
+    &quot;email&quot;: &quot;hodkiewicz.declan@example.com&quot;,
+    &quot;salary&quot;: 600,
+    &quot;position&quot;: &quot;Occupational Therapist Aide&quot;,
+    &quot;created_at&quot;: &quot;2024-02-16 14:01:14&quot;,
+    &quot;updated_at&quot;: &quot;2024-02-16 14:01:14&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-employee--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-employee--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-employee--id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-employee--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-employee--id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-employee--id-" data-method="GET"
+      data-path="api/v1/employee/{id}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-employee--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-employee--id-"
+                    onclick="tryItOut('GETapi-v1-employee--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-employee--id-"
+                    onclick="cancelTryOut('GETapi-v1-employee--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-employee--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/employee/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-employee--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-employee--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="GETapi-v1-employee--id-"
+               value="1"
+               data-component="url">
+    <br>
+<p>The ID of the employee. Example: <code>1</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="endpoints-PUTapi-v1-employee--id-">Update the specified resource in storage.</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-PUTapi-v1-employee--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "http://127.0.0.1:8000/api/v1/employee/1" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"name\": \"ueqjkynjvseg\",
+    \"age\": 5,
+    \"country\": \"quidem\",
+    \"email\": \"labernathy@example.org\",
+    \"salary\": 3,
+    \"position\": \"quod\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/v1/employee/1"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "ueqjkynjvseg",
+    "age": 5,
+    "country": "quidem",
+    "email": "labernathy@example.org",
+    "salary": 3,
+    "position": "quod"
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-v1-employee--id-">
+</span>
+<span id="execution-results-PUTapi-v1-employee--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-v1-employee--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-v1-employee--id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PUTapi-v1-employee--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-v1-employee--id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PUTapi-v1-employee--id-" data-method="PUT"
+      data-path="api/v1/employee/{id}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-v1-employee--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-v1-employee--id-"
+                    onclick="tryItOut('PUTapi-v1-employee--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-v1-employee--id-"
+                    onclick="cancelTryOut('PUTapi-v1-employee--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-v1-employee--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/v1/employee/{id}</code></b>
+        </p>
+            <p>
+            <small class="badge badge-purple">PATCH</small>
+            <b><code>api/v1/employee/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PUTapi-v1-employee--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PUTapi-v1-employee--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="PUTapi-v1-employee--id-"
+               value="1"
+               data-component="url">
+    <br>
+<p>The ID of the employee. Example: <code>1</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="PUTapi-v1-employee--id-"
+               value="ueqjkynjvseg"
+               data-component="body">
+    <br>
+<p>Must be at least 3 characters. Must not be greater than 255 characters. Example: <code>ueqjkynjvseg</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>age</code></b>&nbsp;&nbsp;
+<small>number</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="age"                data-endpoint="PUTapi-v1-employee--id-"
+               value="5"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Must not be greater than 99. Example: <code>5</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>country</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="country"                data-endpoint="PUTapi-v1-employee--id-"
+               value="quidem"
+               data-component="body">
+    <br>
+<p>Example: <code>quidem</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="email"                data-endpoint="PUTapi-v1-employee--id-"
+               value="labernathy@example.org"
+               data-component="body">
+    <br>
+<p>Must be a valid email address. Example: <code>labernathy@example.org</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>salary</code></b>&nbsp;&nbsp;
+<small>number</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="salary"                data-endpoint="PUTapi-v1-employee--id-"
+               value="3"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Must not be greater than 100000. Example: <code>3</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>position</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="position"                data-endpoint="PUTapi-v1-employee--id-"
+               value="quod"
+               data-component="body">
+    <br>
+<p>Example: <code>quod</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-DELETEapi-v1-employee--id-">Remove the specified resource from storage.</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-DELETEapi-v1-employee--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "http://127.0.0.1:8000/api/v1/employee/1" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/v1/employee/1"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-v1-employee--id-">
+</span>
+<span id="execution-results-DELETEapi-v1-employee--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-v1-employee--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-v1-employee--id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-v1-employee--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-v1-employee--id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-v1-employee--id-" data-method="DELETE"
+      data-path="api/v1/employee/{id}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-v1-employee--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-v1-employee--id-"
+                    onclick="tryItOut('DELETEapi-v1-employee--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-v1-employee--id-"
+                    onclick="cancelTryOut('DELETEapi-v1-employee--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-v1-employee--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/v1/employee/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-v1-employee--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-v1-employee--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="DELETEapi-v1-employee--id-"
+               value="1"
+               data-component="url">
+    <br>
+<p>The ID of the employee. Example: <code>1</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="endpoints-GETapi-v1-employee-top-salary--country--">Getting employees with the highest salary by country. All countries, or by one country if in url</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-GETapi-v1-employee-top-salary--country--">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://127.0.0.1:8000/api/v1/employee-top-salary/a" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/v1/employee-top-salary/a"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-employee-top-salary--country--">
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+x-ratelimit-limit: 60
+x-ratelimit-remaining: 57
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">[]</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-employee-top-salary--country--" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-employee-top-salary--country--"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-employee-top-salary--country--"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-employee-top-salary--country--" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-employee-top-salary--country--">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-employee-top-salary--country--" data-method="GET"
+      data-path="api/v1/employee-top-salary/{country?}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-employee-top-salary--country--', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-employee-top-salary--country--"
+                    onclick="tryItOut('GETapi-v1-employee-top-salary--country--');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-employee-top-salary--country--"
+                    onclick="cancelTryOut('GETapi-v1-employee-top-salary--country--');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-employee-top-salary--country--"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/employee-top-salary/{country?}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-employee-top-salary--country--"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-employee-top-salary--country--"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>country</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="country"                data-endpoint="GETapi-v1-employee-top-salary--country--"
+               value="a"
+               data-component="url">
+    <br>
+<p>Example: <code>a</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="endpoints-GETapi-v1-employee-position--position-">Getting employees list by position name requested.</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-GETapi-v1-employee-position--position-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://127.0.0.1:8000/api/v1/employee/position/nobis" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/v1/employee/position/nobis"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-employee-position--position-">
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+x-ratelimit-limit: 60
+x-ratelimit-remaining: 56
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">[]</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-employee-position--position-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-employee-position--position-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-employee-position--position-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-employee-position--position-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-employee-position--position-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-employee-position--position-" data-method="GET"
+      data-path="api/v1/employee/position/{position}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-employee-position--position-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-employee-position--position-"
+                    onclick="tryItOut('GETapi-v1-employee-position--position-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-employee-position--position-"
+                    onclick="cancelTryOut('GETapi-v1-employee-position--position-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-employee-position--position-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/employee/position/{position}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-employee-position--position-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-employee-position--position-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>position</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="position"                data-endpoint="GETapi-v1-employee-position--position-"
+               value="nobis"
+               data-component="url">
+    <br>
+<p>The position. Example: <code>nobis</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="endpoints-GETapi-v1-employee-pdf--id-">Generate PDF profile file for employee requested by ID.</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-GETapi-v1-employee-pdf--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://127.0.0.1:8000/api/v1/employee-pdf/velit" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://127.0.0.1:8000/api/v1/employee-pdf/velit"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-employee-pdf--id-">
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+x-ratelimit-limit: 60
+x-ratelimit-remaining: 55
+access-control-allow-origin: *
+ </code></pre></details>         <pre>
+
+<code class="language-json" style="max-height: 300px;">[]</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-employee-pdf--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-employee-pdf--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-employee-pdf--id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-employee-pdf--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-employee-pdf--id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-employee-pdf--id-" data-method="GET"
+      data-path="api/v1/employee-pdf/{id}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-employee-pdf--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-employee-pdf--id-"
+                    onclick="tryItOut('GETapi-v1-employee-pdf--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-employee-pdf--id-"
+                    onclick="cancelTryOut('GETapi-v1-employee-pdf--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-employee-pdf--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/employee-pdf/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-employee-pdf--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-employee-pdf--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="id"                data-endpoint="GETapi-v1-employee-pdf--id-"
+               value="velit"
+               data-component="url">
+    <br>
+<p>The ID of the employee pdf. Example: <code>velit</code></p>
+            </div>
+                    </form>
+
+            
+
+        
+    </div>
+    <div class="dark-box">
+                    <div class="lang-selector">
+                                                        <button type="button" class="lang-button" data-language-name="bash">bash</button>
+                                                        <button type="button" class="lang-button" data-language-name="javascript">javascript</button>
+                            </div>
+            </div>
+</div>
+</body>
+</html>

@@ -14,7 +14,7 @@ class EmployeeApiTest extends TestCase
     /** @test */
     public function the_application_returns_a_successful_response(): void
     {
-        $response = $this->getJson('/api/employee');
+        $response = $this->getJson('/api/v1/employee');
 
         $response->assertStatus(200);
     }
@@ -24,7 +24,7 @@ class EmployeeApiTest extends TestCase
     {
         Employee::factory(10)->create();
 
-        $response = $this->getJson('/api/employee?limit=4&offset=4');
+        $response = $this->getJson('/api/v1/employee?limit=4&offset=4');
         $responseDada = $response->json();
 
         $this->assertCount(4, $responseDada);
@@ -37,11 +37,13 @@ class EmployeeApiTest extends TestCase
     /** @test */
     public function the_application_returns_one_employee(): void
     {
-        $employee = Employee::factory()->create();
+        Employee::factory()->create(['email' => 'www@com.com']);
 
-        $response = $this->getJson('/api/employee/1');
+        $response = $this->getJson('/api/v1/employee/1');
+        $responseData = $response->json();
 
-        $this->assertEquals($response->json(), $employee->toArray());
+        $this->assertEquals('www@com.com', $responseData['email']);
+
     }
 
     /** @test */
@@ -56,7 +58,7 @@ class EmployeeApiTest extends TestCase
             'position' => 'PHP Back-end developer',
         ];
 
-        $response = $this->postJson('/api/employee', $employee);
+        $response = $this->postJson('/api/v1/employee', $employee);
 
         $response->assertStatus(201)
             ->assertJson($employee);
@@ -75,7 +77,7 @@ class EmployeeApiTest extends TestCase
             'position' => 'PHP Back-end developer',
         ];
 
-        $response = $this->postJson('/api/employee', $employee);
+        $response = $this->postJson('/api/v1/employee', $employee);
 
         $response->assertStatus(422);
 
@@ -94,7 +96,7 @@ class EmployeeApiTest extends TestCase
             'position' => 'PHP Back-end developer',
         ];
 
-        $response = $this->putJson('/api/employee/1', $employee);
+        $response = $this->putJson('/api/v1/employee/1', $employee);
         $responseData = $response->json();
 
         if (! empty($responseData)) {
@@ -110,7 +112,7 @@ class EmployeeApiTest extends TestCase
         Weather::factory()->create([
             'employee_id' => 1,
         ]);
-        $response = $this->deleteJson('api/employee/1');
+        $response = $this->deleteJson('api/v1/employee/1');
 
         $response->assertStatus(202);
 

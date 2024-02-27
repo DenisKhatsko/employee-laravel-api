@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Action\DownloadEmployeePdfAction;
 use App\Http\Controllers\Controller;
@@ -62,7 +62,7 @@ class EmployeeController extends Controller
     {
         $employee = Employee::create($request->validated());
 
-        return response()->success($employee, 201);
+        return new EmployeeResource($employee);
 
     }
 
@@ -73,7 +73,7 @@ class EmployeeController extends Controller
     {
         $employee = Employee::findOrFail($id);
 
-        return response()->success($employee);
+        return new EmployeeResource($employee);
     }
 
     /**
@@ -83,7 +83,9 @@ class EmployeeController extends Controller
     {
         $result = $employee->update($request->validated());
         if ($result) {
-            return response()->success($employee, 202);
+            return (new EmployeeResource($employee))
+                ->response()
+                ->setStatusCode(202);
         }
 
         return response()->not_found(400);

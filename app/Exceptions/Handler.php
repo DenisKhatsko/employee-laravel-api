@@ -29,7 +29,7 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->renderable(function (ModelNotFoundException|NotFoundHttpException $e, $request) {
-            if ($request->is('api/*')) {
+            if ($request->wantsJson() || $request->is('api/*')) {
                 Log::channel('api')->error($e->getMessage());
                 return response()->not_found();
             }

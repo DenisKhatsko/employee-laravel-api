@@ -7,7 +7,7 @@ use App\Models\Weather;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class EmployeeApiTest extends TestCase
+class EmployeeApiCrudTest extends TestCase
 {
     use RefreshDatabase;
 

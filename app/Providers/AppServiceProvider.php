@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Employee;
 use App\Observers\EmployeeObserver;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
@@ -29,6 +30,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Model::preventLazyLoading(! app()->isProduction());
+
         JsonResource::withoutWrapping();
         Employee::observe(EmployeeObserver::class);
 

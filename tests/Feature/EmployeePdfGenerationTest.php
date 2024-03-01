@@ -15,7 +15,7 @@ class EmployeePdfGenerationTest extends TestCase
     {
         Employee::factory()->create();
 
-        $response = $this->getJson('/api/v1/employee-pdf/1');
+        $response = $this->getJson('/api/v1/employee/1/pdf');
 
         $this->assertEquals('application/pdf', $response->headers->get('Content-Type'));
         $this->assertEquals('attachment; filename="employee-1.pdf"', $response->headers->get('Content-Disposition'));

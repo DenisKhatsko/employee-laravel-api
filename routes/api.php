@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\EmployeeController;
+use App\Http\Controllers\Api\V1\EmployeePdfController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,5 +18,5 @@ Route::group(['middleware' => 'api'], function () {
     Route::apiResource('employee', EmployeeController::class);
     Route::get('/employee-top-salary/{country?}', [EmployeeController::class, 'highestSalaryByCountry']);
     Route::get('/employee/position/{position}', [EmployeeController::class, 'employeeByPosition']);
-    Route::get('/employee-pdf/{id}', [EmployeeController::class, 'employeePdf']);
+    Route::get('/employee/{id}/pdf', EmployeePdfController::class);
 });

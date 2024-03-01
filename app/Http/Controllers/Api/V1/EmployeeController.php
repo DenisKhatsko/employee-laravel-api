@@ -141,9 +141,9 @@ class EmployeeController extends Controller
     /**
      * Generate PDF profile file for employee requested by ID.
      */
-    public function employeePdf($id): Response|JsonResponse
+    public static function generateEmployeePdf($id): Response|JsonResponse
     {
-        $employee = $this->employeeQueryService->getEmployeeById($id);
+        $employee = Employee::query()->where('id', $id)->first();
 
         if (is_null($employee)) {
             return response()->not_found();

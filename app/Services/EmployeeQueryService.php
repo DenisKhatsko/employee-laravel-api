@@ -24,14 +24,8 @@ class EmployeeQueryService
         return Employee::query()->where('position', $position)->get();
     }
 
-    public function getEmployeeById($id): ?Model
-    {
-        return Employee::query()->where('id', $id)->first();
-    }
-
     public function getEmployeesWithHighestSalaryByCountry($country): Collection
     {
-
         $query = Employee::query()->select('employees.*')
             ->leftJoin(DB::raw('(SELECT country, MAX(salary) AS max_salary FROM employees GROUP BY country) AS max_salaries'), function ($join) {
                 $join->on('employees.country', '=', 'max_salaries.country')

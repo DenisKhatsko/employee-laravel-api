@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Action\DownloadEmployeePdfAction;
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use Illuminate\Http\JsonResponse;
@@ -13,8 +14,8 @@ class EmployeePdfController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke($id): Response|JsonResponse
+    public function __invoke(Employee $employee): Response|JsonResponse
     {
-        return EmployeeController::generateEmployeePdf($id);
+        return DownloadEmployeePdfAction::getPdf($employee);
     }
 }

@@ -69,10 +69,8 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id): JsonResource|JsonResponse
+    public function show(Employee $employee): JsonResource|JsonResponse
     {
-        $employee = Employee::findOrFail($id);
-
         return new EmployeeResource($employee);
     }
 
@@ -82,13 +80,12 @@ class EmployeeController extends Controller
     public function update(EmployeeRequest $request, Employee $employee): JsonResponse
     {
         $result = $employee->update($request->validated());
-        if ($result) {
-            return (new EmployeeResource($employee))
-                ->response()
-                ->setStatusCode(202);
+        if (! $result) {
+            response()->not_found(400);
         }
 
-        return response()->not_found(400);
+        return (new EmployeeResource($employee))->response()->setStatusCode(202);
+
     }
 
     /**
@@ -97,6 +94,7 @@ class EmployeeController extends Controller
     public function destroy($id): JsonResponse
     {
         if (! Employee::find($id)) {
+
             return response()->not_found();
         }
         if ($weather = Weather::query()->where('employee_id', $id)) {
@@ -138,18 +136,4 @@ class EmployeeController extends Controller
 
     }
 
-    /**
-     * Generate PDF profile file for employee requested by ID.
-     */
-    public static function generateEmployeePdf($id): Response|JsonResponse
-    {
-        $employee = Employee::query()->where('id', $id)->first();
-
-        if (is_null($employee)) {
-            return response()->not_found();
-        }
-
-        return DownloadEmployeePdfAction::getPdf($employee);
-
-    }
 }

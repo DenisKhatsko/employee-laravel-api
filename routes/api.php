@@ -18,5 +18,5 @@ Route::group(['middleware' => 'api'], function () {
     Route::apiResource('employee', EmployeeController::class);
     Route::get('/employee-top-salary/{country?}', [EmployeeController::class, 'highestSalaryByCountry']);
     Route::get('/employee/position/{position}', [EmployeeController::class, 'employeeByPosition']);
-    Route::get('/employee/{id}/pdf', EmployeePdfController::class);
+    Route::get('/employee/{employee}/pdf', EmployeePdfController::class);
 });

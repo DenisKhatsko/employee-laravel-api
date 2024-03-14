@@ -31,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::preventLazyLoading(! app()->isProduction());
+        Model::shouldBeStrict(! app()->isProduction());
 
         JsonResource::withoutWrapping();
         Employee::observe(EmployeeObserver::class);

@@ -13,11 +13,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
+
 
 class EmployeeController extends Controller
 {
+    const TTL = 60 * 60 * 24;
     private int $limit = 500;
 
     private int $offset = 0;
@@ -31,7 +31,8 @@ class EmployeeController extends Controller
      */
     public function index(Request $request): JsonResource
     {
-        return EmployeeResource::collection(Cache::remember('employees'.$this->offset.$this->limit, 60 * 60 * 24, function () use ($request) {
+        return EmployeeResource::collection(Cache::remember('employees'.$this->offset.$this->limit,
+            self::TTL, function () use ($request) {
             if ($request->has('offset')) {
                 $offset = (int) $request->get('offset');
                 $this->offset = ($offset > 0) ? $offset : 0;

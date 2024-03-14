@@ -31,16 +31,17 @@ class EmployeeController extends Controller
      */
     public function index(Request $request): JsonResource
     {
-        return EmployeeResource::collection(Cache::remember('employees'.$this->offset.$this->limit,
-            self::TTL, function () use ($request) {
-            if ($request->has('offset')) {
-                $offset = (int) $request->get('offset');
-                $this->offset = ($offset > 0) ? $offset : 0;
-            }
-            if ($request->has('limit')) {
-                $limit = (int) $request->get('limit');
-                $this->limit = ($limit > 0 && $limit < 500) ? $limit : $this->limit;
-            }
+        if ($request->has('offset')) {
+            $offset = (int) $request->get('offset');
+            $this->offset = ($offset > 0) ? $offset : 0;
+        }
+        if ($request->has('limit')) {
+            $limit = (int) $request->get('limit');
+            $this->limit = ($limit > 0 && $limit < $this->limit) ? $limit : $this->limit;
+        }
+        return EmployeeResource::collection(Cache::remember('employees'.'offset='.$this->offset.'limit='.$this->limit,
+            self::TTL, function () {
+
             return Employee::query()->offset($this->offset)->limit($this->limit)->get();
         }));
 
@@ -49,7 +50,7 @@ class EmployeeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(EmployeeRequest $request)
+    public function store(EmployeeRequest $request): EmployeeResource
     {
         $employee = Employee::create($request->validated());
 

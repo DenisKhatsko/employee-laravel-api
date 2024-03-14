@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Action\DownloadEmployeePdfAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\EmployeeRequest;
 use App\Http\Resources\Api\EmployeeResource;
@@ -13,8 +12,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class EmployeeController extends Controller
 {
@@ -31,26 +31,16 @@ class EmployeeController extends Controller
      */
     public function index(Request $request): JsonResource
     {
-        if ($request->has('offset')) {
-            $offset = (int) $request->get('offset');
-            $this->offset = ($offset > 0) ? $offset : 0;
-        }
-        if ($request->has('limit')) {
-            $limit = (int) $request->get('limit');
-            $this->limit = ($limit > 0 && $limit < 500) ? $limit : $this->limit;
-        }
-
-        if (Cache::has('employees'.$this->offset.$this->limit)) {
-
-            return EmployeeResource::collection(Cache::get('employees'.$this->offset.$this->limit));
-        }
-        $qb = Employee::query();
-
-        $qb->offset($this->offset)->limit($this->limit);
-        $employees = $qb->get();
-
-        return EmployeeResource::collection(Cache::remember('employees'.$this->offset.$this->limit, 60 * 60 * 24, function () use ($employees) {
-            return $employees;
+        return EmployeeResource::collection(Cache::remember('employees'.$this->offset.$this->limit, 60 * 60 * 24, function () use ($request) {
+            if ($request->has('offset')) {
+                $offset = (int) $request->get('offset');
+                $this->offset = ($offset > 0) ? $offset : 0;
+            }
+            if ($request->has('limit')) {
+                $limit = (int) $request->get('limit');
+                $this->limit = ($limit > 0 && $limit < 500) ? $limit : $this->limit;
+            }
+            return Employee::query()->offset($this->offset)->limit($this->limit)->get();
         }));
 
     }
@@ -135,5 +125,6 @@ class EmployeeController extends Controller
         return EmployeeResource::collection($employee);
 
     }
+
 
 }

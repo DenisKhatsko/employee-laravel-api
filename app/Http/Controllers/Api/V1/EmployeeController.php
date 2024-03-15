@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Cache;
+use DB;
 
 
 class EmployeeController extends Controller
@@ -55,7 +56,6 @@ class EmployeeController extends Controller
         $employee = Employee::create($request->validated());
 
         return new EmployeeResource($employee);
-
     }
 
     /**
@@ -71,29 +71,29 @@ class EmployeeController extends Controller
      */
     public function update(EmployeeRequest $request, Employee $employee): JsonResponse
     {
-        $result = $employee->update($request->validated());
-        if (! $result) {
-            response()->not_found(400);
-        }
+        $employee->updateOrFail($request->validated());
 
         return (new EmployeeResource($employee))->response()->setStatusCode(202);
-
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id): JsonResponse
+    public function destroy(Employee $employee): JsonResponse
     {
-        if (! Employee::find($id)) {
+        $employee = Employee::findOrFail($employee->id);
 
-            return response()->not_found();
+        DB::beginTransaction();
+        try {
+            if ($weather = Weather::where('employee_id', $employee->id)) {
+                $weather->delete();
+            }
+            $employee->delete();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
         }
-        if ($weather = Weather::query()->where('employee_id', $id)) {
-            $weather->delete();
-        }
-
-        Employee::query()->where('id', $id)->delete();
 
         return response()->success([], 202);
     }
@@ -125,8 +125,6 @@ class EmployeeController extends Controller
         }
 
         return EmployeeResource::collection($employee);
-
     }
-
 
 }

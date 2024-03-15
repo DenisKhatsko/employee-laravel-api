@@ -16,6 +16,7 @@ class EmployeePdfController extends Controller
      */
     public function __invoke(Employee $employee): Response|JsonResponse
     {
+        $employee = Employee::findOrFail($employee->id);
         return DownloadEmployeePdfAction::getPdf($employee);
     }
 }

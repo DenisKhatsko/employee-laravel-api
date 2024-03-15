@@ -24,7 +24,8 @@ class EmployeePdfGenerationTest extends TestCase
     /** @test */
     public function employeeDataDownloadFailsWithInvalidEmployee(): void
     {
-        $response = $this->getJson('/api/v1/employee-pdf/5');
+
+        $response = $this->getJson('/api/v1/employee/666/pdf');
 
         $response->assertStatus(404);
 
